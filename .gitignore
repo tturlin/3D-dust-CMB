@@ -4,3 +4,4 @@ __pycache__
 
 # Files
 log
+.DS_Store
