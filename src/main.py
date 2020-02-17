@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # version: 1.0.0
 
+from astropy.io import fits
 import healpy as hp
 import logging
 import matplotlib.pyplot as plt
@@ -11,7 +12,10 @@ import sys
 
 import healpix
 
-logging.basicConfig(filename="log", level=logging.DEBUG, filemode='w')
+__name__ = "main"
+
+logging.basicConfig(filename="log", level=logging.INFO, filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 data_name = Path("./data")
 
@@ -37,7 +41,7 @@ while data_name.is_dir() == True:
         try:
             choice = int(choice)
         except:
-            choice = input("Your mouvement choice ? ")
+            choice = input("Your mouvement choice? ")
 
     if choice == len(possibilities)-1:
         data_name = data_name.parent
@@ -45,15 +49,27 @@ while data_name.is_dir() == True:
         data_name = data_name / possibilities[choice]
     print()
 
+
 try:
-    hpx_map = healpix.HEALPix(data_name)
-    logging.info("Data loaded: {}".format(hpx_map.get_name()))
+    hpx_map = healpix.HealpixMap(data_name, field=None)
+    logger.info("Data loaded: {}".format(hpx_map.get_name()))
 except FileNotFoundError:
-    logging.error("The data you're trying to load are not located here: {}".format(data_name.name))
+    logger.error("The data you're trying to load are not located here. Data location: {}".format(data_name.name))
     sys.exit()
 except OSError:
-    logging.error("The data you're trying to load are not HEALPix sky map. Data name: {}".format(data_name.name))
+    logger.error("The data you're trying to load are not HEALPix sky map. Data name: {}".format(data_name.name))
+    sys.exit()
+except IndexError:
+    logger.error("The field of data you're trying to load doesn't exist. Field index: {}".format(field))
+    logger.debug("No verification of field validity!!!")
     sys.exit()
 
-hpx_map.draw_map('G', "hist")
+
+hpx_map.draw_map(1, "hist")
+hpx_map.draw_region(0, 0, 4, 6)
 hpx_map.show_map()
+test = hpx_map.create_region(0, 0, 4, 6)
+test.draw_region(2)
+test.show_region(True)
+
+print("testing blocant plot")
