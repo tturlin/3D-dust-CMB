@@ -74,7 +74,7 @@ class HealpixMap():
             print("{}: {}".format(i, key))
         dtype = int(input("Which data do you want to show? "))
 
-        hp.mollview(self.data[dtype], coord='G', title=self.data_type[dtype], norm=norm, fig=fig, xsize=4086)
+        hp.mollview(self.data[dtype], coord='G', title=self.data_type[dtype], norm=norm, fig=fig, xsize=8192)
         hp.graticule()
         logger.info("Sky map created, field loaded: {}".format(self.data_type[dtype]))
 
@@ -109,10 +109,10 @@ class HealpixMap():
     def create_region(self, lon, lat, lon_size, lat_size, resol=1.5):
         rdata = []
         res_deg = resol / 60
-        lon_size = int(lon_size / res_deg)
-        lat_size = int(lat_size / res_deg)
+        x_size = int(lon_size / res_deg)
+        y_size = int(lat_size / res_deg)
         for i in range(len(self.data)):
-            rdata.append(hp.gnomview(self.data[i], rot=[lon, lat], xsize=lon_size, ysize=lat_size, coord='G', return_projected_map=True, reso=resol))
+            rdata.append(hp.gnomview(self.data[i], rot=[lon, lat], xsize=x_size, ysize=y_size, coord='G', return_projected_map=True, reso=resol))
             plt.close()
         self.regions.append(HealpixRegion(lon, lat, lon_size, lat_size, rdata, self.data_type, res_deg, self))
         return self.regions[-1]
