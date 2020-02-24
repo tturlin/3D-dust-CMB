@@ -1,0 +1,36 @@
+@startuml
+
+title Class Diagram
+
+class HealpixMap <may contain HealpixRegion> {
+    -Path path
+    +2D_array data
+    -Int NSIDE
+    -Int NPIX
+    -Float PIX_SIZE
+    +String name
+
+    +void draw_map()
+    +HealpixRegion create_region()
+    +void draw_region_on_map(HealpixRegion)
+    +void show_map()
+}
+
+
+class Region {
+    +Float LAT
+    +Float LON
+    +Float LAT_SIZE
+    +Float LON_SIZE
+    +2D_array data
+
+    +void draw_region()
+    +void show_region()
+}
+
+class HealpixRegion <extend Region> {
+}
+
+Region -right-|> HealpixRegion
+HealpixMap "1" o-down- "0..N" HealpixRegion
+@enduml
